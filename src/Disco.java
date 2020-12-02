@@ -1,7 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -16,6 +13,26 @@ public class Disco extends Componente {
 
     protected void relatar(String mensagem) {
         super.relatar("Disco", mensagem);
+    }
+
+    public String toRemove() {
+
+        String[] arquivos;
+        File myD = new File(this.computador.getDiretorioBackup());
+
+        FilenameFilter filter = (f, name) -> name.startsWith("arquivo");
+
+        arquivos = myD.list(filter);
+        assert arquivos != null;
+        int len = arquivos.length;
+
+        if(len >= 2){
+            return arquivos[0];
+        }
+        else{
+            return null;
+        }
+
     }
 
     public void run() {
