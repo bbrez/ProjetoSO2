@@ -5,8 +5,8 @@ public class Processador extends Componente {
         this.computador = computador;
     }
 
-    protected void report(String mensagem) {
-        super.report("Processador", mensagem);
+    protected void relatar(String mensagem) {
+        super.relatar("Processador", mensagem);
     }
 
     public void run() {
@@ -17,7 +17,7 @@ public class Processador extends Componente {
                 e.printStackTrace();
             }
 
-            this.report("Executei uma instrução");
+            this.relatar("Executei uma instrução");
         }
     }
 }

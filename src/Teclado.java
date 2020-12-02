@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Teclado extends Componente {
     private final Computador computador;
@@ -8,8 +7,8 @@ public class Teclado extends Componente {
         this.computador = computador;
     }
 
-    protected void report(String mensagem){
-        super.report("Teclado", mensagem);
+    protected void relatar(String mensagem){
+        super.relatar("Teclado", mensagem);
     }
 
     public void run() {
@@ -20,7 +19,7 @@ public class Teclado extends Componente {
                 e.printStackTrace();
             }
 
-            this.report("Usuário digitou algo");
+            this.relatar("Usuário digitou algo");
         }
     }
 }
