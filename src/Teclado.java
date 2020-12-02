@@ -4,11 +4,12 @@ public class Teclado extends Componente {
     private final Computador computador;
 
     public Teclado(Computador computador){
+        this.setName("Thread-Teclado");
         this.computador = computador;
     }
 
     protected void relatar(String mensagem){
-        super.relatar("Teclado", mensagem);
+        super.relatar(this.getName(), mensagem);
     }
 
     public void run() {

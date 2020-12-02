@@ -6,15 +6,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Disco extends Componente {
-    private final Computador computador;
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    private final Computador computador; //Referência ao computador dono do disco
+
+    private final int maxBackup = 3; //Numero maximo de arquivos na pasta backup
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); //Formatador para data e hora usado no log do backup
+
 
     public Disco(Computador computador) {
+        this.setName("Thread-Disco");
         this.computador = computador;
     }
 
     protected void relatar(String mensagem) {
-        super.relatar("Disco", mensagem);
+        super.relatar(this.getName(), mensagem);
     }
 
     public String aRemover() {
@@ -28,7 +32,7 @@ public class Disco extends Componente {
         assert arquivos != null;
         int len = arquivos.length;
 
-        if (len > 3) {
+        if (len > this.maxBackup) {
             return arquivos[0];
         } else {
             return null;
@@ -61,7 +65,6 @@ public class Disco extends Componente {
     }
 
     public void run() {
-        this.setName("Thread-Disco");
         while (computador.isRodando()) {
             try {
                 sleep(1000);

@@ -1,14 +1,18 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 public class Computador {
     private boolean rodando;
+
     private final Processador processador;
     private final Disco disco;
     private final Teclado teclado;
+    private final int[] memoria;
 
-    private final String diretorioBackup = "./backup";
-    private final String arquivoListagem = "./listagem.txt";
+    private final String arquivoListagem = "./listagem.txt"; //Arquivo que lista o conteudo do diretorio de backup
+    private final String diretorioBackup = "./backup"; //Diretorio onde será feita a copia do arquivo de listagem
+    private final int tamMemoria = 30;
 
     public Computador() throws IOException{
         this.rodando = false;
@@ -26,6 +30,12 @@ public class Computador {
         this.processador = new Processador(this);
         this.disco = new Disco(this);
         this.teclado = new Teclado(this);
+
+        Random r = new Random();
+        memoria = new int[this.tamMemoria];
+        for(int i = 0; i < memoria.length ; ++i){
+            memoria[i] = r.nextInt(10); //Gera valores aleatórios para memória dentro de [0,10[
+        }
     }
 
     public void ligar(){
@@ -37,6 +47,10 @@ public class Computador {
 
     public void desligar(){
         this.rodando = false;
+    }
+
+    public int lerMemoria(int endereco){
+        return this.memoria[endereco];
     }
 
     public boolean isRodando() {
