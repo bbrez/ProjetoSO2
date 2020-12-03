@@ -14,21 +14,24 @@ public class Processador extends Componente {
 
     public void run() {
         while (computador.isRodando()) {
+
+
+            this.relatar("Executei uma instrução"); //Relata que uma instrução foi executada
+
+            if (this.contPrograma < this.computador.getTamMemoria()) {
+                int instrucao = this.computador.lerMemoria(this.contPrograma++); //Lê um endereço na memória e avança o contador de programa
+                if (instrucao == this.computador.getInstBackup()) {
+                    this.relatar("Valor lido: " + instrucao + " [Instrução de Backup]");
+                    this.computador.getDisco().execBackup();
+                } else {
+                    this.relatar("Valor lido: " + instrucao);
+                }
+            }
+
             try {
                 sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-
-            this.relatar("Executei uma instrução"); //Relata que uma instrução foi executada
-
-            int instrucao = this.computador.lerMemoria(this.contPrograma++); //Lê um endereço na memória e avança o contador de programa
-            if(this.contPrograma >= this.computador.getTamMemoria()) this.contPrograma = 0;
-            if(instrucao == this.computador.getInstBackup()){
-                this.relatar("Valor lido: " + instrucao + " [Instrução de Backup]");
-                this.computador.getDisco().execBackup();
-            } else {
-                this.relatar("Valor lido: " + instrucao);
             }
         }
     }

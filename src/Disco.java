@@ -8,7 +8,6 @@ import java.util.Objects;
 public class Disco extends Componente {
     private final Computador computador; //Referência ao computador dono do disco
 
-    private final int maxBackup = 3; //Numero maximo de arquivos na pasta backup
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); //Formatador para data e hora usado no log do backup
     private boolean execOperacao = false; //Semáforo do disco, é verdadeiro quando está executando alguma operação
 
@@ -33,7 +32,7 @@ public class Disco extends Componente {
         assert arquivos != null;
         int len = arquivos.length;
 
-        if (len > this.maxBackup) {
+        if (len > this.computador.getMaxBackup()) {
             return arquivos[0];
         } else {
             return null;
