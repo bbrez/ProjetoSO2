@@ -21,7 +21,15 @@ public class Processador extends Componente {
             }
 
             this.relatar("Executei uma instrução"); //Relata que uma instrução foi executada
-            this.relatar("Valor lido: " + this.computador.lerMemoria(contPrograma++)); //Lê um endereço na memória e relata oque foi lido
+
+            int instrucao = this.computador.lerMemoria(this.contPrograma++); //Lê um endereço na memória e avança o contador de programa
+            if(this.contPrograma >= this.computador.getTamMemoria()) this.contPrograma = 0;
+            if(instrucao == this.computador.getInstBackup()){
+                this.relatar("Valor lido: " + instrucao + " [Instrução de Backup]");
+                this.computador.getDisco().execBackup();
+            } else {
+                this.relatar("Valor lido: " + instrucao);
+            }
         }
     }
 }

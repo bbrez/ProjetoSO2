@@ -10,6 +10,7 @@ public class Disco extends Componente {
 
     private final int maxBackup = 3; //Numero maximo de arquivos na pasta backup
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); //Formatador para data e hora usado no log do backup
+    private boolean execOperacao = false; //Semáforo do disco, é verdadeiro quando está executando alguma operação
 
 
     public Disco(Computador computador) {
@@ -21,7 +22,7 @@ public class Disco extends Componente {
         super.relatar(this.getName(), mensagem);
     }
 
-    public String aRemover() {
+    private String aRemover() {
 
         String[] arquivos;
         File diretorio = new File(this.computador.getDiretorioBackup());
@@ -40,7 +41,7 @@ public class Disco extends Componente {
 
     }
 
-    public String aInserir() {
+    private String aInserir() {
 
         File diretorio = new File(this.computador.getDiretorioBackup());
 
@@ -64,15 +65,32 @@ public class Disco extends Componente {
         return insert;
     }
 
-    public void run() {
-        while (computador.isRodando()) {
+    public synchronized void execBackup(){
+        if(this.execOperacao){
             try {
-                sleep(1000);
+                wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        this.execOperacao = true;
+        notifyAll();
+    }
 
-            this.relatar("Dei uma volta");
+    public synchronized void run() {
+        while (computador.isRodando()) {
+            this.execOperacao = false;
+            notifyAll();
+
+            while(!this.execOperacao){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            this.relatar("Comecei uma volta");
 
             try (BufferedWriter escritor = new BufferedWriter(new FileWriter(this.computador.getArquivoListagem(), true))) {
                 escritor.write("Timestamp:" + dtf.format(LocalDateTime.now()) + "\n");
@@ -80,8 +98,9 @@ public class Disco extends Componente {
 
                 File diretorio = new File(this.computador.getDiretorioBackup());
                 for (File f : Objects.requireNonNull(diretorio.listFiles())) {
-                    escritor.write(f.getName() + "\n");
+                    escritor.write("    " + f.getName() + "\n");
                 }
+                escritor.write("------------------------------\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -96,6 +115,14 @@ public class Disco extends Componente {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            this.relatar("Terminei a volta");
 
         }
     }

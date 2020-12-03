@@ -12,7 +12,9 @@ public class Computador {
 
     private final String arquivoListagem = "./listagem.txt"; //Arquivo que lista o conteudo do diretorio de backup
     private final String diretorioBackup = "./backup"; //Diretorio onde será feita a copia do arquivo de listagem
-    private final int tamMemoria = 30;
+    private final int tamMemoria = 30; //Tamanho da memória do computador
+    private final int maxInst = 10; //Limite superior para as instruções, não inclusivo
+    private final int instBackup = 5; //Qual instrução deve fazer o disco executar um backup
 
     public Computador() throws IOException{
         this.rodando = false;
@@ -34,7 +36,7 @@ public class Computador {
         Random r = new Random();
         memoria = new int[this.tamMemoria];
         for(int i = 0; i < memoria.length ; ++i){
-            memoria[i] = r.nextInt(10); //Gera valores aleatórios para memória dentro de [0,10[
+            memoria[i] = r.nextInt(this.maxInst); //Gera valores aleatórios para memória
         }
     }
 
@@ -63,6 +65,26 @@ public class Computador {
 
     public String getArquivoListagem() {
         return arquivoListagem;
+    }
+
+    public Disco getDisco() {
+        return disco;
+    }
+
+    public Processador getProcessador() {
+        return processador;
+    }
+
+    public Teclado getTeclado() {
+        return teclado;
+    }
+
+    public int getInstBackup() {
+        return instBackup;
+    }
+
+    public int getTamMemoria() {
+        return tamMemoria;
     }
 
     public static void main(String[] args) {
