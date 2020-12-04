@@ -12,17 +12,19 @@ import java.util.Objects;
 public class Disco extends Componente {
     private final Computador computador; //Referência ao computador dono do disco
 
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); //Formatador para data e hora usado no log do backup
-    private boolean execOperacao = false; //Semáforo do disco, é verdadeiro quando está executando alguma operação
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); //Formatador para data e hora usado no log do backup
+    private int semaforo = 0; //Semáforo do disco, se for maior que 0, executa um backup e decrementa
+    private final int delay;
 
     //Construtor do disco
     //Entrada: Referencia pro computador que possui o componente
     //Saida: Nenhuma
     //Pre-condição: Nenhuma
     //Pos-condição: Disco criado
-    public Disco(Computador computador) {
+    public Disco(Computador computador, int delayDisco) {
         this.setName("Thread-Disco");
         this.computador = computador;
+        this.delay = delayDisco;
     }
 
     //Relata o que o componente esta realizando
@@ -73,8 +75,8 @@ public class Disco extends Componente {
         arquivos = diretorio.list(filtro);
         assert arquivos != null;
 
-        String insert = null;
-        if(arquivos.length > 0){
+        String insert;
+        if (arquivos.length > 0) {
             insert = arquivos[arquivos.length - 1];
             insert = insert.replaceAll("\\D+", "");
             int n = Integer.parseInt(insert);
@@ -92,15 +94,8 @@ public class Disco extends Componente {
     //Saida: Nenhuma
     //Pre-condição: Thread em execução
     //Pos-condição: Semaforo atualizado
-    public synchronized void execBackup(){
-        if(this.execOperacao){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        this.execOperacao = true;
+    public synchronized void execBackup() {
+        ++this.semaforo;
         notifyAll();
     }
 
@@ -111,10 +106,11 @@ public class Disco extends Componente {
     //Pos-condição: Disco executado       
     public synchronized void run() {
         while (computador.isRodando()) {
-            this.execOperacao = false;
-            notifyAll();
+            if(semaforo > 0){
+                --this.semaforo;
+            }
 
-            while(!this.execOperacao){
+            while (this.semaforo == 0) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -141,7 +137,7 @@ public class Disco extends Componente {
                 Files.copy(Path.of(this.computador.getArquivoListagem()), Path.of(this.computador.getDiretorioBackup() + "/" + this.aInserir()));
 
                 String remover = this.aRemover();
-                if(remover != null){
+                if (remover != null) {
                     Files.delete(Path.of(this.computador.getDiretorioBackup() + "/" + remover));
                 }
             } catch (IOException e) {
@@ -149,7 +145,7 @@ public class Disco extends Componente {
             }
 
             try {
-                sleep(1000);
+                sleep(delay);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -13,6 +13,7 @@ public class Teclado extends Componente {
     //Pre-condição: Nenhuma
     //Pos-condição: Teclado criado
     public Teclado(Computador computador){
+    public Teclado(Computador computador) {
         this.setName("Thread-Teclado");
         this.computador = computador;
     }
@@ -22,8 +23,8 @@ public class Teclado extends Componente {
     //Saida: Nenhuma
     //Pre-condição: String valida
     //Pos-condição: Relato realizado
-    protected void relatar(String mensagem){
-        super.relatar(this.getName(), mensagem);
+    protected void relatar() {
+        super.relatar(this.getName(), "Usuário digitou algo");
     }
 
     //Executa o teclado, que sera responsavel por realizar a leitura de mensagens feitas pelo usuario
@@ -32,14 +33,14 @@ public class Teclado extends Componente {
     //Pre-condição: Deve existir um teclado
     //Pos-condição: Teclado executado
     public void run() {
-        while(computador.isRodando()){
+        while (computador.isRodando()) {
             try {
                 System.in.read();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            this.relatar("Usuário digitou algo");
+            this.relatar();
         }
     }
 }

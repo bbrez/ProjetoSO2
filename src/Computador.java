@@ -8,50 +8,54 @@ import java.util.Random;
  */
 public class Computador {
     private boolean rodando;
-
     private final Processador processador;
     private final Disco disco;
     private final Teclado teclado;
     private final int[] memoria;
 
-    private final String arquivoListagem = "./listagem.txt"; //Arquivo que lista o conteudo do diretorio de backup
-    private final String diretorioBackup = "./backup"; //Diretorio onde será feita a copia do arquivo de listagem
-    private final int tamMemoria = 30; //Tamanho da memória do computador
-    private final int[] initMemoria = null;  //Valores utilizados para inicializar a memoria, caso seja null, utiliza valores aleatorios
-    private final int maxInst = 10; //Limite superior para as instruções, não inclusivo
-    private final int instBackup = 5; //Qual instrução deve fazer o disco executar um backup
-    private final int maxBackup = 3; //Numero máximo de arquivos na pasta backup
+    private final String arquivoListagem; //Arquivo que lista o conteudo do diretorio de backup
+    private final String diretorioBackup; //Diretorio onde será feita a copia do arquivo de listagem
+    private final int tamMemoria; //Tamanho da memória do computador
+    private final int maxInst; //Limite superior para as instruções, não inclusivo
+    private final int instBackup; //Qual instrução deve fazer o disco executar um backup
+    private final int maxBackup; //Numero máximo de arquivos na pasta backup
 
     //Construtor do computador, alem de inicializar os componentes, a pasta e o arquivo que contem a lista da pasta
     //Entrada: Nenhuma
     //Saida: Nenhuma
     //Pre-condição: Arquivo de configuração lido com sucesso
     //Pos-condição: Computador criado, e componentes, pasta e arquivo incializados
-    public Computador() throws IOException{
+    public Computador(int delayProcessador, int delayDisco, String arquivoListagem, String diretorioBackup, int tamMemoria, int maxInst, int instBackup, int maxBackup, int[] initMemoria) throws IOException {
         this.rodando = false;
+        this.arquivoListagem = arquivoListagem;
+        this.diretorioBackup = diretorioBackup;
+        this.tamMemoria = tamMemoria;
+        this.maxInst = maxInst;
+        this.instBackup = instBackup;
+        this.maxBackup = maxBackup;
 
         File dir = new File(this.diretorioBackup);
-        if(!dir.exists()){
-            if(!dir.mkdirs()) throw new IOException("Falha ao criar diretorio " + this.diretorioBackup);
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) throw new IOException("Falha ao criar diretorio " + this.diretorioBackup);
         }
 
         File arq = new File(this.arquivoListagem);
-        if(!arq.exists()){
-                if(!arq.createNewFile()) throw new IOException("Falha ao criar arquivo " + this.arquivoListagem);
+        if (!arq.exists()) {
+            if (!arq.createNewFile()) throw new IOException("Falha ao criar arquivo " + this.arquivoListagem);
         }
 
-        this.processador = new Processador(this);
-        this.disco = new Disco(this);
+        this.processador = new Processador(this, delayProcessador);
+        this.disco = new Disco(this, delayDisco);
         this.teclado = new Teclado(this);
 
-        if(this.initMemoria == null){
+        if (initMemoria == null) {
             Random r = new Random();
             memoria = new int[this.tamMemoria];
-            for(int i = 0; i < memoria.length ; ++i){
+            for (int i = 0; i < memoria.length; ++i) {
                 memoria[i] = r.nextInt(this.maxInst); //Gera valores aleatórios para memória
             }
         } else {
-            this.memoria = this.initMemoria;
+            this.memoria = initMemoria;
         }
     }
 
@@ -60,7 +64,7 @@ public class Computador {
     //Saida: Nenhuma
     //Pre-condição: Componentes e computador devem existir
     //Pos-condição: Componentes executados
-    public void ligar(){
+    public void ligar() {
         this.rodando = true;
         this.processador.start();
         this.disco.start();
@@ -72,7 +76,7 @@ public class Computador {
     //Saida: Nenhuma
     //Pre-condição: Thread ligada
     //Pos-condição: Thread desligada
-    public void desligar(){
+    public void desligar() {
         this.rodando = false;
     }
 
@@ -81,7 +85,7 @@ public class Computador {
     //Saida: Memoria lida
     //Pre-condição: Endereço valido
     //Pos-condição: Memoria lida
-    public int lerMemoria(int endereco){
+    public int lerMemoria(int endereco) {
         return this.memoria[endereco];
     }
 
@@ -164,9 +168,10 @@ public class Computador {
     //Pos-condição: Programa principal executado
     public static void main(String[] args) {
         try {
-            Computador computador = new Computador();
-            computador.ligar();
-        } catch (IOException e){
+            Computador c;
+            c = LeitorConfig.MontarComputador("config.cfg");
+            c.ligar();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

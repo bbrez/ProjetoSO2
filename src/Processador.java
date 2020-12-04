@@ -5,6 +5,7 @@
 public class Processador extends Componente {
     private final Computador computador;
 
+    private final int delay;
     private int contPrograma = 0; //Contador de programa (Program counter)
 
     //Construtor do processador
@@ -12,9 +13,10 @@ public class Processador extends Componente {
     //Saida: Nenhuma
     //Pre-condição: Nenhuma
     //Pos-condição: Processador criado
-    public Processador(Computador computador) {
+    public Processador(Computador computador, int delayProcessador) {
         this.setName("Thread-Processador");
         this.computador = computador;
+        this.delay = delayProcessador;
     }
 
     //Relata o que o componente esta realizando
@@ -48,7 +50,7 @@ public class Processador extends Componente {
             }
 
             try {
-                sleep(100);
+                sleep(this.delay);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
