@@ -1,17 +1,36 @@
+/**
+ * Processador: classe que simula o funcionamento de um processador,
+ * eh tambem responsavel pelas instruções.
+ */
 public class Processador extends Componente {
     private final Computador computador;
 
     private int contPrograma = 0; //Contador de programa (Program counter)
 
+    //Construtor do processador
+    //Entrada: Referencia pro computador que possui o componente
+    //Saida: Nenhuma
+    //Pre-condição: Nenhuma
+    //Pos-condição: Processador criado
     public Processador(Computador computador) {
         this.setName("Thread-Processador");
         this.computador = computador;
     }
 
+    //Relata o que o componente esta realizando
+    //Entrada: Mensagem que sera impressa
+    //Saida: Nenhuma
+    //Pre-condição: String valida
+    //Pos-condição: Relato realizado
     protected void relatar(String mensagem) {
         super.relatar(this.getName(), mensagem);
     }
 
+    //Executa o processador, que sera responsavel por receber e executar instruções
+    //Entrada: Nenhuma
+    //Saida: Nenhuma
+    //Pre-condição: Deve existir um processador
+    //Pos-condição: Processador executado    
     public void run() {
         while (computador.isRodando()) {
 

@@ -5,22 +5,40 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * Disco: classe que simula um disco,
+ * eh tambem responsavel por criar e manter a pasta de backup.
+ */
 public class Disco extends Componente {
     private final Computador computador; //Referência ao computador dono do disco
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); //Formatador para data e hora usado no log do backup
     private boolean execOperacao = false; //Semáforo do disco, é verdadeiro quando está executando alguma operação
 
-
+    //Construtor do disco
+    //Entrada: Referencia pro computador que possui o componente
+    //Saida: Nenhuma
+    //Pre-condição: Nenhuma
+    //Pos-condição: Disco criado
     public Disco(Computador computador) {
         this.setName("Thread-Disco");
         this.computador = computador;
     }
 
+    //Relata o que o componente esta realizando
+    //Entrada: Mensagem que sera impressa
+    //Saida: Nenhuma
+    //Pre-condição: String valida
+    //Pos-condição: Relato realizado    
     protected void relatar(String mensagem) {
         super.relatar(this.getName(), mensagem);
     }
 
+    //Retorna o nome do arquivo que sera removido da pasta
+    //Entrada: Nenhuma
+    //Saida: String com o nome do arquivo
+    //Pre-condição: Deve existir a pasta no diretorio
+    //Pos-condição: Nome do arquivo retornado    
     private String aRemover() {
 
         String[] arquivos;
@@ -40,6 +58,11 @@ public class Disco extends Componente {
 
     }
 
+    //Retorna o nome do arquivo que sera inserido na pasta
+    //Entrada: Nenhuma
+    //Saida: String com o nome do arquivo
+    //Pre-condição: Deve existir a pasta no diretorio
+    //Pos-condição: Nome do arquivo retornado
     private String aInserir() {
 
         File diretorio = new File(this.computador.getDiretorioBackup());
@@ -64,6 +87,11 @@ public class Disco extends Componente {
         return insert;
     }
 
+    //Função que atualiza o semaforo para fazer um pedido de backup
+    //Entrada: Nenhuma
+    //Saida: Nenhuma
+    //Pre-condição: Thread em execução
+    //Pos-condição: Semaforo atualizado
     public synchronized void execBackup(){
         if(this.execOperacao){
             try {
@@ -76,6 +104,11 @@ public class Disco extends Componente {
         notifyAll();
     }
 
+    //Executa o disco, que ira aguardar ate o processador solicitar o backup
+    //Entrada: Nenhuma
+    //Saida: Nenhuma
+    //Pre-condição: Deve existir um disco
+    //Pos-condição: Disco executado       
     public synchronized void run() {
         while (computador.isRodando()) {
             this.execOperacao = false;
