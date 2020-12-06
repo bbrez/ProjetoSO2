@@ -3,4 +3,5 @@ Bruno de Castro Brezolin
 Leonardo Benitez de Freitas
 
 Referências:
+O programa referente a questão 2 da especificação foi feito utilizando a IDE Jetbrains Intellij IDEA	
 Para os diagramas apresentados foi utilizado o programa Astah Professional
