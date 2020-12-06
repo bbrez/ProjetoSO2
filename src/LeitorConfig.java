@@ -3,7 +3,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * LeitorConfig: Classe que ira ler o arquivo de configurações
+ * eh tambem responsavel por montar o computador
+ */
+
+
 public class LeitorConfig {
+    //Lê as variaveis do arquivo de configurações e monta o computador
+    //Entrada: Nome do arquivo de configuração
+    //Saida: Computador montado
+    //Pre-condição: Nenhuma
+    //Pos-condição: Variaveis lidas e computador montado
     public static Computador MontarComputador(String arquivo) throws IOException {
         String arquivoListagem = "./listagem.txt", diretorioBackup = "./backup";
         int tamMemoria = 30, maxInst = 10, instBackup = 5, maxBackup = 3, delayProcessador = 100, delayDisco = 1000;
