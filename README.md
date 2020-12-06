@@ -1,2 +1,2 @@
-# ProjetoSO2
-Segundo Projeto de Sistemas Operacionais
+# Segundo projeto de Sistemas Operacionais
+
