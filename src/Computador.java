@@ -76,8 +76,13 @@ public class Computador {
     //Saida: Nenhuma
     //Pre-condição: Thread ligada
     //Pos-condição: Thread desligada
-    public void desligar() {
+    public synchronized void desligar() {
+        System.out.println("Computador sendo encerrado...");
         this.rodando = false;
+        synchronized (this.getDisco()){
+            notifyAll();
+        }
+        System.out.println("Computador encerrado com sucesso!");
     }
 
     //Realiza a leitura da memoria em um endereço especifico
@@ -171,6 +176,14 @@ public class Computador {
             Computador c;
             c = LeitorConfig.MontarComputador("config.cfg");
             c.ligar();
+
+            Runtime.getRuntime().addShutdownHook(new Thread(){
+                @Override
+                public void run() {
+                    c.desligar();
+                }
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
         }

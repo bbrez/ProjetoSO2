@@ -12,7 +12,6 @@ public class Teclado extends Componente {
     //Saida: Nenhuma
     //Pre-condição: Nenhuma
     //Pos-condição: Teclado criado
-    public Teclado(Computador computador){
     public Teclado(Computador computador) {
         this.setName("Thread-Teclado");
         this.computador = computador;

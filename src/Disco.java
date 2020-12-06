@@ -118,6 +118,7 @@ public class Disco extends Componente {
                 }
             }
 
+            if(!this.computador.isRodando()) continue;
             this.relatar("Comecei uma volta");
 
             try (BufferedWriter escritor = new BufferedWriter(new FileWriter(this.computador.getArquivoListagem(), true))) {
